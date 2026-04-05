@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/remote-schema.json",
+  "identifier": "youtube-login-remote",
+  "description": "Allow the YouTube login WebView to call Tauri IPC commands",
+  "remote": {
+    "urls": [
+      "https://*.youtube.com/*",
+      "https://youtube.com/*",
+      "https://accounts.google.com/*",
+      "https://*.google.com/*"
+    ]
+  },
+  "windows": ["youtube-login"],
+  "permissions": [
+    "core:default"
+  ]
+}

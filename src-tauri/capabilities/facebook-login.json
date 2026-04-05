@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/remote-schema.json",
+  "identifier": "facebook-login-remote",
+  "remote": { "urls": ["https://*.facebook.com/*", "https://facebook.com/*", "https://*.fbcdn.net/*"] },
+  "windows": ["facebook-login"],
+  "permissions": ["core:default"]
+}

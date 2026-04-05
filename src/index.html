@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpticalCortex</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header>
+      <div class="logo-icon">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="h-bg" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#1e1e32"/>
+              <stop offset="100%" stop-color="#0e0e1a"/>
+            </linearGradient>
+            <linearGradient id="h-iris" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#c4b5fd"/>
+              <stop offset="100%" stop-color="#6d28d9"/>
+            </linearGradient>
+            <linearGradient id="h-pupil" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#7c3aed"/>
+            </linearGradient>
+            <linearGradient id="h-eye-stroke" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="50%" stop-color="#c4b5fd"/>
+              <stop offset="100%" stop-color="#818cf8"/>
+            </linearGradient>
+            <filter id="h-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="h-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="1024" height="1024" rx="100" ry="100" fill="url(#h-bg)"/>
+          <ellipse cx="512" cy="512" rx="420" ry="280" fill="#6d28d9" opacity="0.14"/>
+          <path d="M 40 512 C 180 220, 844 220, 984 512 C 844 804, 180 804, 40 512 Z"
+                fill="rgba(167,139,250,0.09)" stroke="url(#h-eye-stroke)" stroke-width="22" filter="url(#h-glow)"/>
+          <circle cx="512" cy="512" r="230" fill="none" stroke="url(#h-iris)" stroke-width="18" opacity="0.9"/>
+          <circle cx="512" cy="512" r="220" fill="rgba(109,40,217,0.20)"/>
+          <circle cx="512" cy="512" r="185" fill="none" stroke="#a78bfa" stroke-width="5" opacity="0.45"/>
+          <circle cx="512" cy="512" r="150" fill="none" stroke="#818cf8" stroke-width="4" opacity="0.3"/>
+          <circle cx="512" cy="512" r="110" fill="url(#h-pupil)" filter="url(#h-soft-glow)"/>
+          <g transform="translate(512,512)" stroke="white" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <line x1="0" y1="-44" x2="0" y2="24" stroke-width="22"/>
+            <polyline points="-36,-6 0,34 36,-6" stroke-width="22"/>
+          </g>
+          <ellipse cx="456" cy="462" rx="32" ry="20" fill="white" opacity="0.30" transform="rotate(-35,456,462)"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>OpticalCortex</h1>
+        <p class="tagline">YouTube · Facebook · X · Instagram · TikTok · M3U8</p>
+      </div>
+      <div id="tool-badges"></div>
+    </header>
+
+    <!-- Tab bar -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </button>
+      <button class="tab-btn" data-tab="playlists">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        My Playlists
+      </button>
+      <button class="tab-btn" data-tab="convert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
+        Convert
+      </button>
+      <button class="tab-btn" data-tab="auth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Authentication
+      </button>
+    </nav>
+
+    <!-- ── Download tab ── -->
+    <div id="tab-download" class="tab-panel">
+
+      <!-- URL Input -->
+      <section class="card">
+        <label class="field-label" for="url-input">Video URL or M3U8 stream address</label>
+        <div class="url-row">
+          <input id="url-input" type="url" placeholder="https://…" autocomplete="off" spellcheck="false" />
+          <span id="url-badge" class="badge hidden"></span>
+        </div>
+
+        <div class="options-grid">
+          <div class="field">
+            <label class="field-label" for="quality-select">Quality</label>
+            <select id="quality-select">
+              <option value="best">Best (video + audio)</option>
+              <option value="1080p">1080p</option>
+              <option value="720p">720p</option>
+              <option value="480p">480p</option>
+              <option value="360p">360p</option>
+              <option value="audio_mp3">Audio only - MP3</option>
+              <option value="audio_m4a">Audio only - M4A</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="filename-input">
+              Output filename <span class="dim">(optional)</span>
+            </label>
+            <input id="filename-input" type="text" placeholder="Leave blank for auto" />
+          </div>
+        </div>
+
+        <div class="options-grid">
+          <div class="field">
+            <label class="field-label">Save to</label>
+            <div class="dir-row">
+              <input id="dir-input" type="text" readonly />
+              <button id="browse-btn" class="btn-secondary">Browse</button>
+            </div>
+          </div>
+
+          <div class="field checkboxes">
+            <label class="field-label">Options</label>
+            <label class="check-label">
+              <input type="checkbox" id="chk-playlist" /> Download playlist
+            </label>
+            <label class="check-label">
+              <input type="checkbox" id="chk-subs" /> Download subtitles
+            </label>
+            <label class="check-label">
+              <input type="checkbox" id="chk-thumb" /> Embed thumbnail
+            </label>
+          </div>
+        </div>
+
+        <button id="download-btn" class="btn-primary" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
+      </section>
+
+      <!-- Downloads list -->
+      <section id="downloads-section" class="hidden">
+        <div class="section-header">
+          <h2>Downloads</h2>
+          <button id="clear-done-btn" class="btn-ghost">Clear finished</button>
+        </div>
+        <div id="downloads-list"></div>
+      </section>
+
+    </div><!-- /tab-download -->
+
+    <!-- ── My Playlists tab ── -->
+    <div id="tab-playlists" class="tab-panel hidden">
+
+      <div id="pl-auth-notice" class="pl-notice hidden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Enable <strong>YouTube Authentication</strong> in the <strong>Authentication</strong> tab to access your playlists.
+      </div>
+
+      <div class="pl-toolbar">
+        <button id="pl-load-btn" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Load My Playlists
+        </button>
+        <span id="pl-status" class="pl-status-text"></span>
+      </div>
+
+      <div id="pl-grid" class="pl-grid"></div>
+
+    </div><!-- /tab-playlists -->
+
+    <!-- ── Convert tab ── -->
+    <div id="tab-convert" class="tab-panel hidden">
+
+      <section class="card">
+        <!-- Input file -->
+        <label class="field-label">Input file</label>
+        <div id="cvt-dropzone" class="cvt-dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span id="cvt-file-label">Click to choose a file…</span>
+        </div>
+
+        <!-- Output format -->
+        <div>
+          <label class="field-label">Output format</label>
+          <div class="cvt-format-groups">
+            <div class="cvt-format-group">
+              <span class="cvt-group-label">Video</span>
+              <div class="cvt-format-btns">
+                <button class="cvt-fmt-btn" data-fmt="mp4">MP4</button>
+                <button class="cvt-fmt-btn" data-fmt="mkv">MKV</button>
+                <button class="cvt-fmt-btn" data-fmt="webm">WebM</button>
+                <button class="cvt-fmt-btn" data-fmt="mov">MOV</button>
+                <button class="cvt-fmt-btn" data-fmt="avi">AVI</button>
+                <button class="cvt-fmt-btn" data-fmt="gif">GIF</button>
+              </div>
+            </div>
+            <div class="cvt-format-group">
+              <span class="cvt-group-label">Audio</span>
+              <div class="cvt-format-btns">
+                <button class="cvt-fmt-btn" data-fmt="mp3">MP3</button>
+                <button class="cvt-fmt-btn" data-fmt="m4a">M4A</button>
+                <button class="cvt-fmt-btn" data-fmt="aac">AAC</button>
+                <button class="cvt-fmt-btn" data-fmt="opus">Opus</button>
+                <button class="cvt-fmt-btn" data-fmt="flac">FLAC</button>
+                <button class="cvt-fmt-btn" data-fmt="wav">WAV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video quality (hidden for audio formats) -->
+        <div id="cvt-quality-row" class="field hidden">
+          <label class="field-label">Video quality</label>
+          <div class="cvt-quality-btns">
+            <button class="cvt-quality-btn" data-q="high">High</button>
+            <button class="cvt-quality-btn active" data-q="medium">Medium</button>
+            <button class="cvt-quality-btn" data-q="low">Low</button>
+          </div>
+          <p class="cvt-quality-hint">High = CRF 18 (larger file) · Medium = CRF 23 · Low = CRF 28 (smaller file)</p>
+        </div>
+
+        <!-- Output directory -->
+        <div class="field">
+          <label class="field-label">Save to</label>
+          <div class="dir-row">
+            <input id="cvt-dir-input" type="text" readonly />
+            <button id="cvt-browse-btn" class="btn-secondary">Browse</button>
+          </div>
+        </div>
+
+        <button id="cvt-btn" class="btn-primary" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          Convert
+        </button>
+      </section>
+
+      <!-- Jobs -->
+      <section id="cvt-jobs-section" class="hidden">
+        <div class="section-header">
+          <h2>Jobs</h2>
+          <button id="cvt-clear-btn" class="btn-ghost">Clear finished</button>
+        </div>
+        <div id="cvt-jobs-list"></div>
+      </section>
+
+    </div><!-- /tab-convert -->
+
+    <!-- ── Authentication tab ── -->
+    <div id="tab-auth" class="tab-panel hidden">
+
+      <!-- YouTube -->
+      <section class="card">
+        <div class="auth-platform-header">
+          <div class="auth-platform-icon yt">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </div>
+          <span class="auth-platform-name">YouTube</span>
+          <span id="yt-auth-chip" class="badge hidden"></span>
+        </div>
+        <p class="auth-hint">Required for private videos, members-only content, and the My Playlists tab. Sign in once and cookies are saved locally.</p>
+        <label class="check-label">
+          <input type="checkbox" id="yt-auth-enabled" />
+          Enable YouTube authentication
+        </label>
+        <div id="yt-auth-controls" class="auth-platform-controls hidden">
+          <div class="auth-sub">
+            <button id="signin-btn" class="btn-yt-signin">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+              Sign in with YouTube
+            </button>
+            <span id="signin-status" class="signin-status"></span>
+          </div>
+          <details class="browser-fallback">
+            <summary>Or use an installed browser's cookies</summary>
+            <div class="browser-fallback-body">
+              <label class="field-label">Browser</label>
+              <div class="auth-browser-controls">
+                <select id="yt-browser-select">
+                  <option value="chrome">Google Chrome</option>
+                  <option value="firefox">Firefox</option>
+                  <option value="edge">Microsoft Edge</option>
+                  <option value="brave">Brave</option>
+                  <option value="opera">Opera</option>
+                  <option value="opera_gx">Opera GX</option>
+                  <option value="chromium">Chromium</option>
+                  <option value="vivaldi">Vivaldi</option>
+                  <option value="safari">Safari</option>
+                </select>
+                <button id="yt-verify-btn" class="btn-secondary">Test</button>
+              </div>
+            </div>
+          </details>
+          <div class="auth-sub">
+            <label class="field-label">Or: cookies.txt file</label>
+            <div class="dir-row">
+              <input id="yt-cookies-file" type="text" readonly placeholder="Select or auto-saved after sign-in…" />
+              <button id="yt-browse-cookies-btn" class="btn-secondary">Browse</button>
+            </div>
+          </div>
+          <div id="dpapi-notice" class="dpapi-notice hidden">
+            <div class="dpapi-notice-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              Windows blocks direct cookie access for this browser
+            </div>
+            <p class="dpapi-notice-body">
+              Chrome-based browsers (Brave, Chrome, Edge) use App-Bound Encryption
+              which prevents yt-dlp from reading cookies directly. Use <strong>Sign in with YouTube</strong> above, or export cookies manually:
+            </p>
+            <ol class="dpapi-steps">
+              <li>Install the <strong>Get cookies.txt LOCALLY</strong> extension in <span id="dpapi-browser-name">your browser</span></li>
+              <li>Log into <strong>youtube.com</strong></li>
+              <li>Click the extension icon → <em>Export cookies for this site</em></li>
+              <li>Save the file and select it in the cookies.txt field above</li>
+            </ol>
+          </div>
+          <div id="yt-auth-result" class="auth-result hidden"></div>
+        </div>
+      </section>
+
+      <!-- Instagram -->
+      <section class="card">
+        <div class="auth-platform-header">
+          <div class="auth-platform-icon ig">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <span class="auth-platform-name">Instagram</span>
+          <span id="ig-auth-chip" class="badge hidden"></span>
+        </div>
+        <p class="auth-hint">Required for private accounts and stories. Log into Instagram in your browser, then select it below.</p>
+        <label class="check-label">
+          <input type="checkbox" id="ig-auth-enabled" />
+          Enable Instagram authentication
+        </label>
+        <div id="ig-auth-controls" class="auth-platform-controls hidden">
+          <div class="auth-sub">
+            <button id="ig-signin-btn" class="btn-ig-signin">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+              Sign in with Instagram
+            </button>
+            <span id="ig-signin-status" class="signin-status"></span>
+          </div>
+          <details class="browser-fallback">
+            <summary>Or use an installed browser's cookies</summary>
+            <div class="browser-fallback-body">
+            <label class="field-label">Browser with Instagram logged in</label>
+            <div class="auth-browser-controls">
+              <select id="ig-browser-select">
+                <option value="chrome">Google Chrome</option>
+                <option value="firefox">Firefox</option>
+                <option value="edge">Microsoft Edge</option>
+                <option value="brave">Brave</option>
+                <option value="opera">Opera</option>
+                <option value="opera_gx">Opera GX</option>
+                <option value="chromium">Chromium</option>
+                <option value="vivaldi">Vivaldi</option>
+                <option value="safari">Safari</option>
+              </select>
+            </div>
+            <p class="auth-hint" style="margin-top:6px">Chrome, Edge and Brave use App-Bound Encryption - if cookies can't be read, use Sign in with Instagram above or the cookies.txt option below instead.</p>
+            </div>
+          </details>
+          <div class="auth-sub">
+            <label class="field-label">Or: cookies.txt file</label>
+            <div class="dir-row">
+              <input id="ig-cookies-file" type="text" readonly placeholder="Select or auto-saved after sign-in…" />
+              <button id="ig-browse-cookies-btn" class="btn-secondary">Browse</button>
+            </div>
+          </div>
+          <div id="ig-auth-result" class="auth-result hidden"></div>
+        </div>
+      </section>
+
+      <!-- Facebook -->
+      <section class="card">
+        <div class="auth-platform-header">
+          <div class="auth-platform-icon fb">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <span class="auth-platform-name">Facebook</span>
+          <span id="fb-auth-chip" class="badge hidden"></span>
+        </div>
+        <p class="auth-hint">Required for private Facebook videos and group content. Log into Facebook in your browser, then select it below.</p>
+        <label class="check-label">
+          <input type="checkbox" id="fb-auth-enabled" />
+          Enable Facebook authentication
+        </label>
+        <div id="fb-auth-controls" class="auth-platform-controls hidden">
+          <div class="auth-sub">
+            <button id="fb-signin-btn" class="btn-fb-signin">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;flex-shrink:0">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Sign in with Facebook
+            </button>
+            <span id="fb-signin-status" class="signin-status"></span>
+          </div>
+          <details class="browser-fallback">
+            <summary>Or use an installed browser's cookies</summary>
+            <div class="browser-fallback-body">
+            <label class="field-label">Browser with Facebook logged in</label>
+            <div class="auth-browser-controls">
+              <select id="fb-browser-select">
+                <option value="chrome">Google Chrome</option>
+                <option value="firefox">Firefox</option>
+                <option value="edge">Microsoft Edge</option>
+                <option value="brave">Brave</option>
+                <option value="opera">Opera</option>
+                <option value="opera_gx">Opera GX</option>
+                <option value="chromium">Chromium</option>
+                <option value="vivaldi">Vivaldi</option>
+                <option value="safari">Safari</option>
+              </select>
+            </div>
+            <p class="auth-hint" style="margin-top:6px">Chrome, Edge and Brave use App-Bound Encryption - if cookies can't be read, use Sign in with Facebook above or the cookies.txt option below instead.</p>
+            </div>
+          </details>
+          <div class="auth-sub">
+            <label class="field-label">Or: cookies.txt file</label>
+            <div class="dir-row">
+              <input id="fb-cookies-file" type="text" readonly placeholder="Select or auto-saved after sign-in…" />
+              <button id="fb-browse-cookies-btn" class="btn-secondary">Browse</button>
+            </div>
+          </div>
+          <div id="fb-auth-result" class="auth-result hidden"></div>
+        </div>
+      </section>
+
+    </div><!-- /tab-auth -->
+
+  </div><!-- /app -->
+
+  <!-- Detail panel - slides over the whole window -->
+  <div id="playlist-detail" class="pl-detail">
+    <div class="pl-detail-header">
+      <button id="pl-detail-back" class="btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+      </button>
+      <h2 id="pl-detail-title"></h2>
+      <button id="pl-detail-dl-all" class="btn-primary" style="margin-left:auto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download All
+      </button>
+    </div>
+    <div id="pl-detail-videos" class="pl-detail-videos"></div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

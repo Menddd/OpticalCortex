@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/remote-schema.json",
+  "identifier": "instagram-login-remote",
+  "remote": { "urls": ["https://*.instagram.com/*", "https://instagram.com/*"] },
+  "windows": ["instagram-login"],
+  "permissions": ["core:default"]
+}

@@ -1,0 +1,111 @@
+name: Build
+
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-22.04
+            target: ''
+            label: linux
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            label: macos-arm
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            label: macos-intel
+          - platform: windows-latest
+            target: ''
+            label: windows
+
+    runs-on: ${{ matrix.platform }}
+    name: Build (${{ matrix.label }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> src-tauri/target
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Build (non-release)
+        if: "!startsWith(github.ref, 'refs/tags/v')"
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}
+
+      - name: Build and release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'OpticalCortex ${{ github.ref_name }}'
+          releaseBody: |
+            ## Downloads
+
+            | Platform | File |
+            |---|---|
+            | **Windows** | `_x64_en-US.msi` (recommended) or `_x64-setup.exe` |
+            | **macOS – Apple Silicon (M1/M2/M3)** | `_aarch64.dmg` |
+            | **macOS – Intel** | `_x64.dmg` |
+            | **Linux – Debian/Ubuntu** | `_amd64.deb` |
+            | **Linux – other (portable)** | `_amd64.AppImage` |
+            | **Linux – Fedora/RHEL** | `.x86_64.rpm` |
+
+            ## What's Changed
+
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+
+            ## Prerequisites
+
+            Both **yt-dlp** and **ffmpeg** must be installed and on your PATH.
+
+            | Tool | Install |
+            |---|---|
+            | yt-dlp | `winget install yt-dlp.yt-dlp` / `brew install yt-dlp` / `apt install yt-dlp` |
+            | ffmpeg | `winget install Gyan.FFmpeg` / `brew install ffmpeg` / `apt install ffmpeg` |
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.target != '' && format('--target {0}', matrix.target) || '' }}

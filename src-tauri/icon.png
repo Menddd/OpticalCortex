@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1e1e32"/>
+      <stop offset="100%" stop-color="#0e0e1a"/>
+    </linearGradient>
+    <linearGradient id="iris-grad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="pupil-grad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="eye-stroke" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="28" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="bg-clip">
+      <rect width="1024" height="1024" rx="230" ry="230"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="230" ry="230" fill="url(#bg)"/>
+
+  <!-- Subtle radial glow behind eye -->
+  <ellipse cx="512" cy="512" rx="340" ry="220" fill="#6d28d9" opacity="0.12" clip-path="url(#bg-clip)"/>
+
+  <!-- Eye / lens shape
+       Lens spans x: 148 → 876, centered at y: 512
+       Upper arc peaks at y: 310, lower arc at y: 714  -->
+  <path d="M 148 512
+           C 260 310, 764 310, 876 512
+           C 764 714, 260 714, 148 512 Z"
+        fill="rgba(167,139,250,0.07)"
+        stroke="url(#eye-stroke)"
+        stroke-width="20"
+        filter="url(#glow)"/>
+
+  <!-- Iris outer ring -->
+  <circle cx="512" cy="512" r="192"
+          fill="none"
+          stroke="url(#iris-grad)"
+          stroke-width="16"
+          opacity="0.85"/>
+
+  <!-- Iris fill -->
+  <circle cx="512" cy="512" r="184"
+          fill="rgba(109,40,217,0.18)"/>
+
+  <!-- Iris detail rings -->
+  <circle cx="512" cy="512" r="152"
+          fill="none"
+          stroke="#a78bfa"
+          stroke-width="4"
+          opacity="0.4"/>
+  <circle cx="512" cy="512" r="120"
+          fill="none"
+          stroke="#818cf8"
+          stroke-width="3"
+          opacity="0.3"/>
+
+  <!-- Pupil -->
+  <circle cx="512" cy="512" r="92"
+          fill="url(#pupil-grad)"
+          filter="url(#soft-glow)"/>
+
+  <!-- Download arrow (white, inside pupil) -->
+  <g transform="translate(512,512)" stroke="white" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Vertical shaft -->
+    <line x1="0" y1="-36" x2="0" y2="20" stroke-width="18"/>
+    <!-- Arrowhead -->
+    <polyline points="-30,-4 0,28 30,-4" stroke-width="18"/>
+  </g>
+
+  <!-- Specular highlight on pupil -->
+  <ellipse cx="474" cy="472" rx="28" ry="18"
+           fill="white" opacity="0.28"
+           transform="rotate(-35,474,472)"/>
+
+  <!-- Corner accent dots -->
+  <circle cx="180" cy="180" r="6" fill="#818cf8" opacity="0.4"/>
+  <circle cx="844" cy="180" r="6" fill="#818cf8" opacity="0.4"/>
+  <circle cx="180" cy="844" r="6" fill="#818cf8" opacity="0.4"/>
+  <circle cx="844" cy="844" r="6" fill="#818cf8" opacity="0.4"/>
+</svg>

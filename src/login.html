@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Signing in to YouTube…</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #13131f;
+      color: #e2e2f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 16px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #2e2e50;
+      border-top-color: #a78bfa;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p { font-size: 0.9rem; color: #6b6b99; }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <p>Opening YouTube sign-in…</p>
+  <script>
+    // Small delay so the spinner renders before navigation
+    setTimeout(function () {
+      window.location.href =
+        'https://accounts.google.com/AccountChooser' +
+        '?continue=https%3A%2F%2Fwww.youtube.com%2F';
+    }, 150);
+  </script>
+</body>
+</html>

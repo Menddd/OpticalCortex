@@ -1,0 +1,12 @@
+{
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main", "youtube-login"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "shell:default",
+    "dialog:default",
+    "dialog:allow-open"
+  ]
+}
